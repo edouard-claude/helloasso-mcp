@@ -12,6 +12,7 @@ memberships, tickets, donations, payments, refunds, checkouts — in front of an
 [![HelloAsso API](https://img.shields.io/badge/HelloAsso%20API%20v5-36%2F36%20routes-49D38A)](https://api.helloasso.com/v5/swagger/ui/index)
 [![Transports](https://img.shields.io/badge/transports-stdio%20%2B%20Streamable%20HTTP-0b7285)](#run-it-over-http-instead)
 [![CI](https://github.com/edouard-claude/helloasso-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/edouard-claude/helloasso-mcp/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/edouard-claude/helloasso-mcp?color=49D38A)](https://github.com/edouard-claude/helloasso-mcp/releases/latest)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Stars](https://img.shields.io/github/stars/edouard-claude/helloasso-mcp?style=flat&logo=github&color=f5c518)](https://github.com/edouard-claude/helloasso-mcp/stargazers)
 
@@ -76,6 +77,25 @@ that matters most — a refund — sends real money back with no undo.
 ## Install
 
 <details open>
+<summary><b>Prebuilt binary (macOS, Linux, Windows)</b></summary>
+
+Download the archive for your platform from the
+[latest release](https://github.com/edouard-claude/helloasso-mcp/releases/latest),
+check it against its `.sha256`, and put `mcp-helloasso` on your `PATH`:
+
+```bash
+# macOS on Apple silicon; swap the target for x86_64-apple-darwin,
+# x86_64-unknown-linux-gnu or aarch64-unknown-linux-gnu
+V=v0.1.0 T=aarch64-apple-darwin
+curl -LO https://github.com/edouard-claude/helloasso-mcp/releases/download/$V/mcp-helloasso-$V-$T.tar.gz
+tar xzf mcp-helloasso-$V-$T.tar.gz
+sudo mv mcp-helloasso-$V-$T/mcp-helloasso /usr/local/bin/
+```
+
+Windows: take the `x86_64-pc-windows-msvc.zip` archive.
+</details>
+
+<details>
 <summary><b>From source (any platform with Rust 1.88+)</b></summary>
 
 ```bash
@@ -98,11 +118,12 @@ cargo install --git https://github.com/edouard-claude/helloasso-mcp
 <summary><b>With Docker</b></summary>
 
 ```bash
-docker build -t mcp-helloasso .
 docker run --rm -i \
   -e HELLOASSO_CLIENT_ID=… -e HELLOASSO_CLIENT_SECRET=… \
-  mcp-helloasso
+  ghcr.io/edouard-claude/helloasso-mcp:latest
 ```
+
+Or build it yourself with `docker build -t mcp-helloasso .`.
 
 The image runs unprivileged and speaks stdio by default; add `--http` for the HTTP
 transport. See [Run it over HTTP instead](#run-it-over-http-instead).
@@ -410,6 +431,19 @@ src/
 ├── prompts.rs     four workflows that ask before touching money
 └── server.rs      capabilities, instructions, and the glue
 ```
+
+## Releasing
+
+Bump `version` in `Cargo.toml`, add its section to [CHANGELOG.md](CHANGELOG.md), then
+push a tag:
+
+```bash
+git tag v0.1.1 && git push origin v0.1.1
+```
+
+The release workflow checks the tag against `Cargo.toml` and the changelog, builds the
+five binaries with their checksums, pushes `ghcr.io/edouard-claude/helloasso-mcp`, and
+publishes the GitHub release with the changelog section as notes.
 
 ## Contributing
 
