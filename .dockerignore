@@ -1,0 +1,12 @@
+target
+.git
+.github
+.claude
+.env
+.env.*
+README.md
+LICENSE
+Dockerfile
+.dockerignore
+.DS_Store
+tests
