@@ -84,6 +84,11 @@ jobs:
     name: ghcr.io image
     needs: verify
     runs-on: ubuntu-latest
+    env:
+      # build-push-action otherwise uploads a .dockerbuild record as a workflow
+      # artifact, which download-artifact cannot extract in the release job.
+      DOCKER_BUILD_RECORD_UPLOAD: false
+      DOCKER_BUILD_SUMMARY: false
     steps:
       - uses: actions/checkout@v5
       - uses: docker/login-action@v3
